@@ -5,19 +5,6 @@ add-apt-repository -y ppa:nginx/stable
 apt-get update
 apt-get install -y nginx dnsutils
 
-cat<<EOF > /etc/init/nginx-reloader.conf
-description     "Dokku nginx reloader service"
-
-start on runlevel [2345]
-stop on runlevel [!2345]
-
-script
-  [[ -f $DOKKU_ROOT/reload-nginx ]] && rm -rf $DOKKU_ROOT/reload-nginx
-  echo | sudo -u git nc -l -U $DOKKU_ROOT/reload-nginx && /etc/init.d/nginx reload
-end script
-respawn
-EOF
-
 echo "include $DOKKU_ROOT/*/nginx.conf;" > /etc/nginx/conf.d/dokku.conf
 
 sed -i 's/# server_names_hash_bucket_size/server_names_hash_bucket_size/' /etc/nginx/nginx.conf

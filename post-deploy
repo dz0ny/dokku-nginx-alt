@@ -79,6 +79,5 @@ SERVER_NAME=`echo $NONSSL_VHOSTS | tr '\n' ' '`
 
 eval "cat <<< \"$(< $NGINX_CONF)\" >> $APP_PATH/nginx.conf"
 
-pluginhook nginx-pre-reload $APP
 echo '-----> Reloading nginx...'
-nc -U $HOME/reload-nginx
+sudo /etc/init.d/nginx reload
