@@ -46,8 +46,8 @@ if [[ -f "$SSL_DIR/server.crt" ]] && [[ -f "$SSL_DIR/server.key" ]]; then
   # e.g. mydomain.com -> mydomain\.com
   #      *.mydomain.com -> .*\.mydomain\.com
   SSL_HOSTNAME=`echo "$SSL_HOSTNAME" | sed 's|\.|\\.|g' | sed 's/\*/\.\*/g'`
-  SSL_VHOSTS=`grep "$SSL_HOSTNAME" $VHOST_PATH`
-  NONSSL_VHOSTS=`grep -v "$SSL_HOSTNAME" $VHOST_PATH` #-v flag means inverse
+  SSL_VHOSTS=`grep "$SSL_HOSTNAME" $VHOST_PATH || true`
+  NONSSL_VHOSTS=`grep -v "$SSL_HOSTNAME" $VHOST_PATH || true` #-v flag means inverse
 
   # For each domain that satisfies the SSL certificate, set up nginx under
   # the SSL template.
