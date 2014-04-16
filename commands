@@ -1,12 +1,13 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # domains [appname] - list all domain names
 # domains:help
 # domains:add [appname] DOMAIN
 # domains:clear [appname]
 # domains:remove [appname] DOMAIN
-set -e
+set -eo pipefail; [[ $DOKKU_TRACE ]] && set -x
+
 APP_NAME="$2"
-APP_PATH="/home/git/$APP_NAME"
+APP_PATH="$DOKKU_ROOT/$APP_NAME"
 VHOST_PATH="$APP_PATH/VHOST"
 
 if [[ $1 == 'domains' ]] || [[ $1 == 'domains:*' ]]; then
@@ -68,7 +69,7 @@ case "$1" in
   ;;
 
   help | domains:help)
-    cat <<EOF
+    cat && cat <<EOF
     Configure VHOST domains:
       domains <appname>               # list custom domains for app
       domains:help <appname>          # this help message
@@ -77,5 +78,5 @@ case "$1" in
       domains:remove <appname> DOMAIN # remove a custom domain from app
 EOF
   ;;
+
 esac
-cat

@@ -3,9 +3,9 @@ set -e
 echo "-----> Deploying nginx..."
 APP="$1"; PORT="$2"
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" #this directory
-APP_PATH="/home/git/$APP"
+APP_PATH="$DOKKU_ROOT/$APP"
 VHOST_PATH="$APP_PATH/VHOST"
-SSL_DIR="$HOME/$APP/ssl"
+SSL_DIR="$APP_PATH/ssl"
 
 # Check if a VHOST exists. If not, default to proxying the server's hostname
 # (which may not always be correct, but worth a try).
@@ -33,9 +33,9 @@ if [[ -f "$SSL_DIR/server.crt" ]] && [[ -f "$SSL_DIR/server.key" ]]; then
   NGINX_CONF="$DIR/nginx.ssl.conf"
 
   # Ability to override default configuration files
-  # (If a nginx.ssl.template file exists in the $HOME/$APP directory, use that
+  # (If a nginx.ssl.template file exists in the $APP_PATH directory, use that
   # instead.)
-  APP_NGINX_SSL_TEMPLATE="$HOME/$APP/nginx.ssl.template"
+  APP_NGINX_SSL_TEMPLATE="$APP_PATH/nginx.ssl.template"
   if [[ -f $APP_NGINX_SSL_TEMPLATE ]]; then
     echo '-----> Overriding default SSL nginx.conf with detected nginx.ssl.template...'
     NGINX_CONF=$APP_NGINX_SSL_TEMPLATE
@@ -54,7 +54,7 @@ if [[ -f "$SSL_DIR/server.crt" ]] && [[ -f "$SSL_DIR/server.key" ]]; then
   while read line; do
     echo "-----> Configuring SSL for $line..."
     SERVER_NAME=$line
-    eval "cat <<< \"$(< $NGINX_CONF)\" >> $HOME/$APP/nginx.conf"
+    eval "cat <<< \"$(< $NGINX_CONF)\" >> $APP_PATH/nginx.conf"
   done <<< "$SSL_VHOSTS"
 fi
 
@@ -63,9 +63,9 @@ fi
 NGINX_CONF="$DIR/nginx.conf"
 
 # Ability to override default configuration files
-# (If a nginx.template file exists in the $HOME/$APP directory, use that
+# (If a nginx.template file exists in the $APP_PATH directory, use that
 # instead.)
-APP_NGINX_TEMPLATE="$HOME/$APP/nginx.template"
+APP_NGINX_TEMPLATE="$APP_PATH/nginx.template"
 if [[ -f $APP_NGINX_TEMPLATE ]]; then
   echo '-----> Overriding default nginx.conf with detected nginx.template...'
   NGINX_CONF=$APP_NGINX_TEMPLATE
@@ -77,7 +77,7 @@ cat $VHOST_PATH | xargs -i \
   echo "-----> Configuring {}..."
 SERVER_NAME=`echo $NONSSL_VHOSTS | tr '\n' ' '`
 
-eval "cat <<< \"$(< $NGINX_CONF)\" >> $HOME/$APP/nginx.conf"
+eval "cat <<< \"$(< $NGINX_CONF)\" >> $APP_PATH/nginx.conf"
 
 pluginhook nginx-pre-reload $APP
 echo '-----> Reloading nginx...'
