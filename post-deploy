@@ -15,7 +15,7 @@ if [[ ! -f $VHOST_PATH ]]; then
 fi
 
 # Remove old nginx.conf if exists
-rm $APP_PATH/nginx.conf
+rm -f $APP_PATH/nginx.conf
 # Add once-off configuration options. These should NOT go in the .conf
 # templates because the .conf templates are meant to be appendable for
 # multiple domains.
