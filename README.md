@@ -37,7 +37,7 @@ Installation and Usage
    
 2. Install the plugin by cloning into the dokku plugins directory:
     ```sh
-    git clone https://github.com/mikexstudios/dokku-nginx-alt.git /var/lib/dokku/plugins/dokku-nginx-alt
+    git clone https://github.com/dz0ny/dokku-nginx-alt.git /var/lib/dokku/plugins/dokku-nginx-alt
     ```
 3. Re-push your app.
 4. To show/add/remove/clear custom domains, see: `dokku domains:help`:
