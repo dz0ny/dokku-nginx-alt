@@ -10,8 +10,9 @@ SSL_DIR="$APP_PATH/ssl"
 # Check if a VHOST exists. If not, default to proxying the server's hostname
 # (which may not always be correct, but worth a try).
 if [[ ! -f $VHOST_PATH ]]; then
-  echo "-----> Creating new $VHOST_PATH with hostname: $HOSTNAME..."
-  echo "$HOSTNAME" > $VHOST_PATH
+  ROOT_VHOST=$(cat $DOKKU_ROOT/VHOST)
+  echo "-----> Creating new $VHOST_PATH with hostname: $APP.$ROOT_VHOST..."
+  echo "$APP.$ROOT_VHOST" > $VHOST_PATH
 fi
 
 # Remove old nginx.conf if exists
